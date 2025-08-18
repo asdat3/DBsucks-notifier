@@ -1,0 +1,15 @@
+annotated-types==0.7.0
+certifi==2025.8.3
+charset-normalizer==3.4.3
+deutsche-bahn-api==1.1.0
+idna==3.10
+mpu==0.23.1
+pydantic==2.11.7
+pydantic-settings==2.10.1
+pydantic_core==2.33.2
+python-dotenv==1.1.1
+requests==2.32.4
+setuptools==80.9.0
+typing-inspection==0.4.1
+typing_extensions==4.14.1
+urllib3==2.5.0
