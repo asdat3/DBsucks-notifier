@@ -11,13 +11,19 @@ def send_discord_message(analysis):
     message = {}
     message["embeds"] = []
 
-    if analysis["trains_to"] < 1:
-        description_list_all_connections = "All connections:\n"
-        for connection in analysis["all_connections"]:
+    description_list_all_connections = "All connections:\n"
+    for connection in analysis["all_connections"]:
+        if connection['line'] == "":
+            description_list_all_connections += f"**{connection['transport_type']}** {analysis['target_hour']}:{connection['time']} - {connection['direction'].lower()} {analysis['destination_station']}\n"
+        else:
+            if str(connection['line']).isdigit():
+                connection['line'] = connection['transport_type'] + connection['line']
             description_list_all_connections += f"**{connection['line']}** ({connection['transport_type']}) {analysis['target_hour']}:{connection['time']} - {connection['direction'].lower()} {analysis['destination_station']}\n"
 
+
+    if analysis["trains_to"] < 1:
         message_embed = {
-            "title": f"Train to {analysis['destination_station']} is **NOT** running",
+            "title": f"Train to {analysis['destination_station']} is **NOT** running ()",
             "description": description_list_all_connections,
             "color": 16711680,
             "footer": {
@@ -26,9 +32,6 @@ def send_discord_message(analysis):
             "timestamp": datetime.now().isoformat()
         }
     else:
-        description_list_all_connections = "All connections:\n"
-        for connection in analysis["all_connections"]:
-            description_list_all_connections += f"**{connection['line']}** ({connection['transport_type']}) {analysis['target_hour']}:{connection['time']} - {connection['direction'].lower()} {analysis['destination_station']}\n"
         message_embed = {
             "title": f"Train to {analysis['destination_station']} is running",
             "description": description_list_all_connections,
