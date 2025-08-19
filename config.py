@@ -10,9 +10,6 @@ class Settings(BaseSettings):
     # Discord webhook URL
     discord_webhook_url: str
     
-    # Station configuration
-    station_name: str = "Berlin Hbf"
-    
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"

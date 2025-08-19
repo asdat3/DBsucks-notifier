@@ -15,6 +15,12 @@ config_list = [
         "target_hours": ["06","07","08"],
         "dest_station_keywords": ["BER","Flughafen"],
         "transport_type_trains": ["RB","RE"]
+    },
+    {
+        "station_name": "BER",
+        "target_hours": ["07","08","09"],
+        "dest_station_keywords": ["Ostbahnhof"],
+        "transport_type_trains": ["RB","RE"]
     }
 ]
 
