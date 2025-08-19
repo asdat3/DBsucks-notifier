@@ -1,10 +1,11 @@
 
-def analyze_to_from_connections(train_data,dest_station_keywords=["BER","Flughafen"],transport_type_trains=["RB","RE","ICE","IC"]):
+def analyze_to_from_connections(train_data,TARGET_HOUR,dest_station_keywords=["BER","Flughafen"],transport_type_trains=["RB","RE","ICE","IC"]):
     """
     Analyze train data to determine if trains to dest_station_keywords are running or replaced by buses.
     
     Args:
         train_data: Dictionary containing station and trains information
+        TARGET_HOUR: Target hour to check for connections
         dest_station_keywords: List of keywords to check for in the departure/arrival path
         transport_type_trains: List of transport types to check for in the departure/arrival path
         
@@ -83,6 +84,8 @@ def analyze_to_from_connections(train_data,dest_station_keywords=["BER","Flughaf
     
     analysis = {
         'station': train_data.get('station', ''),
+        "destination_station": dest_station_keywords[0],
+        'target_hour': TARGET_HOUR,
         'total_connections': len(ber_connections),
         'buses_to': len(buses_to_ber),
         'trains_to': len(trains_to_ber),
