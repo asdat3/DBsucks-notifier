@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings
-from typing import Optional
+from typing import List, Dict, Any
+import json
 
 
 class Settings(BaseSettings):
@@ -9,6 +10,17 @@ class Settings(BaseSettings):
     
     # Discord webhook URL
     discord_webhook_url: str
+    
+    # Station configurations - JSON string from environment variable
+    station_configs: str
+    
+    @property
+    def config_list(self) -> List[Dict[str, Any]]:
+        """Parse the station_configs JSON string into a list of configuration dictionaries."""
+        try:
+            return json.loads(self.station_configs)
+        except json.JSONDecodeError as e:
+            raise ValueError(f"Invalid JSON in station_configs: {e}")
     
     class Config:
         env_file = ".env"

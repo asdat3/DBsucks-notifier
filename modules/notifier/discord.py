@@ -23,7 +23,7 @@ def send_discord_message(analysis):
 
     if analysis["trains_to"] < 1:
         message_embed = {
-            "title": f"Train to {analysis['destination_station']} is **NOT** running ()",
+            "title": f"Train to {analysis['destination_station']} is **NOT** running",
             "description": description_list_all_connections,
             "color": 16711680,
             "footer": {
