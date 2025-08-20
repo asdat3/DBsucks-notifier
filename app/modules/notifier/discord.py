@@ -2,16 +2,17 @@ import requests
 from app.config import settings
 from datetime import datetime
 
-def send_discord_message(analysis):
+def send_discord_message(analysis,tomorrow):
     """
     Send a message to a Discord webhook.
     Args:
         analysis: Analysis results with details about dest_station_keywords connections
+        tomorrow: date when the check is running
     """
     message = {}
     message["embeds"] = []
 
-    description_list_all_connections = "All connections:\n"
+    description_list_all_connections = f"All connections: ({tomorrow})\n"
     for connection in analysis["all_connections"]:
         if connection['line'] == "":
             description_list_all_connections += f"**{connection['transport_type']}** {analysis['target_hour']}:{connection['time']} - {connection['direction'].lower()} {analysis['destination_station']}\n"

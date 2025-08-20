@@ -26,6 +26,6 @@ for config in settings.config_list:
 
         if plan:
             analysis = analyze_to_from_connections(plan,TARGET_HOUR,dest_station_keywords=config["dest_station_keywords"],transport_type_trains=config["transport_type_trains"])
-            send_discord_message(analysis)
+            send_discord_message(analysis,tomorrow)
         else:
             print("No timetable data received from API.")
