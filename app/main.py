@@ -1,15 +1,15 @@
 from datetime import datetime, timedelta
 from deutsche_bahn_api import ApiAuthentication, StationHelper, TimetableHelper
 from db_timetable_api import timetable
-from config import settings
-from modules.analyzers import analyze_to_from_connections
-from modules.notifier.discord import send_discord_message
+from app.config import settings
+from app.modules.analyzers import analyze_to_from_connections
+from app.modules.notifier.discord import send_discord_message
 
 db = timetable.timetable_api(clientid=settings.db_client_id, clientsecret=settings.db_client_secret)
 auth = ApiAuthentication(settings.db_client_id, settings.db_client_secret)
 
 
-if datetime.now().hour < 12:
+if datetime.now().hour < 18:
     tomorrow = datetime.now().strftime("%Y-%m-%d")
     print(f"Running morning check for {tomorrow} (today)")
 else:

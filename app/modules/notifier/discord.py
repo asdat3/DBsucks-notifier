@@ -1,5 +1,5 @@
 import requests
-from config import settings
+from app.config import settings
 from datetime import datetime
 
 def send_discord_message(analysis):
