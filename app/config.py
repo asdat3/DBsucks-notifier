@@ -13,6 +13,12 @@ class Settings(BaseSettings):
     
     # Station configurations - JSON string from environment variable
     station_configs: str
+
+    # UTC correction
+    utc_correction: int
+
+    # Hours to check
+    hours_to_check: str
     
     @property
     def config_list(self) -> List[Dict[str, Any]]:
@@ -21,6 +27,11 @@ class Settings(BaseSettings):
             return json.loads(self.station_configs)
         except json.JSONDecodeError as e:
             raise ValueError(f"Invalid JSON in station_configs: {e}")
+        
+    @property
+    def hours_to_check_list(self) -> List[int]:
+        """Parse the hours_to_check string into a list of integers."""
+        return json.loads(self.hours_to_check)
     
     class Config:
         env_file = ".env"

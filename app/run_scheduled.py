@@ -2,6 +2,7 @@ from app.main import main
 import scheduler
 import datetime as dt
 import time
+from app.config import settings
 
 def run_main():
     """Wrapper function to run the main function"""
@@ -16,10 +17,10 @@ if __name__ == "__main__":
     schedule = scheduler.Scheduler()
     
     # Schedule the main function to run twice daily
-    schedule.daily(dt.time(hour=5, minute=0), run_main)   # 5 AM
-    schedule.daily(dt.time(hour=21, minute=0), run_main)  # 9 PM
+    for hour in settings.hours_to_check_list:
+        schedule.daily(dt.time(hour=(hour+settings.utc_correction), minute=0), run_main)
     
-    print("Scheduler started. Main function will run at 5 AM and 9 PM daily.")
+    print(f"Scheduler started. Main function will run at {settings.hours_to_check_list} daily.")
     print("Press Ctrl+C to stop the scheduler.")
     
     try:
