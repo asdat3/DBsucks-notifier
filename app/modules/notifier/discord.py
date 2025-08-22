@@ -23,7 +23,7 @@ def send_discord_message(all_hours_analysis, tomorrow, station_name):
     overall_replaced_by_bus = total_buses_to > 0 and total_trains_to == 0
 
     # Create description showing all hours
-    description = f"**Station:** {station_name}\n**Date:** {tomorrow}\n\n"
+    description = f"**📍 Station:** {station_name}\n**📅 Date:** {tomorrow}\n\n"
     
     for analysis in all_hours_analysis:
         hour = analysis["target_hour"]
@@ -31,7 +31,7 @@ def send_discord_message(all_hours_analysis, tomorrow, station_name):
         buses_to = analysis["buses_to"]
         
         if trains_to > 0:
-            status = f"✅ **{hour}:00** - {trains_to} train(s) running"
+            status = f"🚆 **{hour}:00** - {trains_to} train(s) running"
         elif buses_to > 0:
             status = f"🚌 **{hour}:00** - {buses_to} bus(es) replacing trains"
         else:
@@ -39,30 +39,54 @@ def send_discord_message(all_hours_analysis, tomorrow, station_name):
         
         description += f"{status}\n"
     
-    # description += f"\n**Overall Status:** "
-    # if overall_train_running:
-    #     description += f"✅ Trains ARE running to {all_hours_analysis[0]['destination_station']}"
-    # else:
-    #     description += f"❌ Trains are NOT running to {all_hours_analysis[0]['destination_station']}"
+    # Create fancy detailed breakdown of all connections
+    description += "\n🚂 **ALL CONNECTIONS** 🚂\n"
     
-    # if overall_replaced_by_bus:
-    #     description += " (replaced by buses)"
-    
-    # description += f"\n**Total:** {total_connections} (Trains: {total_trains_to}, Buses: {total_buses_to})"
-
-    # Create detailed breakdown of all connections
-    description += "\n**Detailed Connections:**\n"
     for analysis in all_hours_analysis:
         hour = analysis["target_hour"]
         if analysis["all_connections"]:
-            description += f"\n**{hour}:00:**\n"
-            for connection in analysis["all_connections"]:
-                if connection['line'] == "":
-                    description += f"  • {connection['transport_type']} {hour}:{connection['time']} - {connection['direction'].lower()} {analysis['destination_station']}\n"
-                else:
-                    if str(connection['line']).isdigit():
-                        connection['line'] = connection['transport_type'] + connection['line']
-                    description += f"  • {connection['line']} ({connection['transport_type']}) {hour}:{connection['time']} - {connection['direction'].lower()} {analysis['destination_station']}\n"
+            # Group connections by direction and transport type
+            to_connections = [conn for conn in analysis["all_connections"] if conn['direction'] == 'TO']
+            from_connections = [conn for conn in analysis["all_connections"] if conn['direction'] == 'FROM']
+            
+            description += f"\n🕐 **{hour}:00** "
+            
+            # TO connections (going to destination)
+            if to_connections:
+                description += f"- **TO {analysis['destination_station']}:**\n"
+                for conn in to_connections:
+                    transport_emoji = "🚌" if conn['is_bus'] else "🚆"
+                    direction_emoji = "➡️"
+                    
+                    # Format line number nicely
+                    line_display = conn['line'] if conn['line'] else "N/A"
+                    if str(line_display).isdigit():
+                        line_display = f"{conn['transport_type']}{line_display}"
+                    
+                    # Format platform
+                    platform_display = f"Pl.{conn['platform']}" if conn['platform'] else ""
+                    
+                    description += f"  {transport_emoji} {direction_emoji} **{line_display}** | {hour}:{conn['time'].replace(":", "")} | {platform_display}\n"
+            
+            # FROM connections (coming from destination)
+            if from_connections:
+                description += f"> 🔄 **FROM {analysis['destination_station']}:**\n"
+                for conn in from_connections:
+                    transport_emoji = "> 🚌" if conn['is_bus'] else "> 🚆"
+                    direction_emoji = "⬅️"
+                    
+                    # Format line number nicely
+                    line_display = conn['line'] if conn['line'] else "N/A"
+                    if str(line_display).isdigit():
+                        line_display = f"{conn['transport_type']}{line_display}"
+                    
+                    # Format platform
+                    platform_display = f"Pl.{conn['platform']}" if conn['platform'] else ""
+                    
+                    description += f"  {transport_emoji} {direction_emoji} **{line_display}** | {hour}:{conn['time'].replace(":", "")} | {platform_display}\n"
+            
+            if not to_connections and not from_connections:
+                description += "  ❌ No connections found\n"
 
     # Set color based on overall status
     if overall_train_running:
