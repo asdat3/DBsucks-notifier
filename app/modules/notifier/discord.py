@@ -66,7 +66,8 @@ def send_discord_message(all_hours_analysis, tomorrow, station_name):
                     # Format platform
                     platform_display = f"Pl.{conn['platform']}" if conn['platform'] else ""
                     
-                    description += f"  {transport_emoji} {direction_emoji} **{line_display}** | {hour}:{conn['time'].replace(":", "")} | {platform_display}\n"
+                    time_display = conn['time'].replace(":", "")
+                    description += f"  {transport_emoji} {direction_emoji} **{line_display}** | {hour}:{time_display} | {platform_display}\n"
             
             # FROM connections (coming from destination)
             if from_connections:
@@ -83,7 +84,8 @@ def send_discord_message(all_hours_analysis, tomorrow, station_name):
                     # Format platform
                     platform_display = f"Pl.{conn['platform']}" if conn['platform'] else ""
                     
-                    description += f"  {transport_emoji} {direction_emoji} **{line_display}** | {hour}:{conn['time'].replace(":", "")} | {platform_display}\n"
+                    time_display = conn['time'].replace(":", "")
+                    description += f"  {transport_emoji} {direction_emoji} **{line_display}** | {hour}:{time_display} | {platform_display}\n"
             
             if not to_connections and not from_connections:
                 description += "  ❌ No connections found\n"
